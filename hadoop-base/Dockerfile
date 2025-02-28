@@ -7,8 +7,7 @@ WORKDIR /root
 # Install necessary packages, no prompt, no recommend
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
 		openjdk-11-jdk-headless \
-		openssh-server \
-		openssh-client \
+		netcat-openbsd \
 		net-tools \
 		curl \
 		gnupg \
@@ -31,17 +30,10 @@ RUN set -x && \
 	curl -fSL "${HADOOP_URL}.asc" -o /tmp/hadoop.tar.gz.asc && \
 	gpg --verify /tmp/hadoop.tar.gz.asc && \
 	tar -xvf /tmp/hadoop.tar.gz -C ./ && \
-	rm /tmp/hadoop.tar.gz* 
-
-# Generate shh keypair for all nodes
-RUN ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa && \
-	cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys && \
-	chmod 0600 ~/.ssh/authorized_keys
-
+	rm /tmp/hadoop.tar.gz* KEYS
 
 # Add to paths
-ENV PATH=${HADOOP_HOME}/bin/:${PATH}
-ENV PATH=${HADOOP_HOME}/sbin/:${PATH}
+ENV PATH=${HADOOP_HOME}/bin:${PATH}
 
 # Copy config files, edit list as needed.
 COPY core-site.xml hdfs-site.xml ${HADOOP_CONF_DIR}/
