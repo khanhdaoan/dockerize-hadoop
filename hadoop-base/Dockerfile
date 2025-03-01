@@ -9,7 +9,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
 		openjdk-11-jdk-headless \
 		netcat-openbsd \
 		net-tools \
-		curl \
+		aria2 \
 		gnupg \
 		libsnappy-dev \
 	&& rm -rf /var/lib/apt/lists/*
@@ -23,15 +23,15 @@ ENV HADOOP_URL=https://www.apache.org/dist/hadoop/common/${HADOOP_VERSION}/${HAD
 ENV HADOOP_HOME=/root/${HADOOP_VERSION}
 ENV HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop
 
-RUN curl -O https://dist.apache.org/repos/dist/release/hadoop/common/KEYS
-RUN set -x && \
-	gpg --import KEYS && \
-	curl -fSL "${HADOOP_URL}" -o /tmp/hadoop.tar.gz && \
-	curl -fSL "${HADOOP_URL}.asc" -o /tmp/hadoop.tar.gz.asc && \
-	gpg --verify /tmp/hadoop.tar.gz.asc && \
-	tar -xvf /tmp/hadoop.tar.gz -C ./ && \
-	rm /tmp/hadoop.tar.gz* KEYS
+RUN aria2c -x 16 -s 16 https://dist.apache.org/repos/dist/release/hadoop/common/KEYS
 
+RUN set -x && \
+gpg --import KEYS && \
+aria2c -x 16 -s 16 -d /tmp -o hadoop.tar.gz "${HADOOP_URL}" && \
+aria2c -x 4 -s 4 -d /tmp -o hadoop.tar.gz.asc "${HADOOP_URL}.asc" && \
+gpg --verify /tmp/hadoop.tar.gz.asc && \
+tar -xvf /tmp/hadoop.tar.gz -C ./ && \
+rm /tmp/hadoop.tar.gz* KEYS
 # Add to paths
 ENV PATH=${HADOOP_HOME}/bin:${PATH}
 
