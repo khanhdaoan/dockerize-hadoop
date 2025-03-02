@@ -15,18 +15,61 @@ services:
       interval: 60s
       timeout: 5s
       retries: 3
-      start_period: 40s
+      start_period: 30s
+    networks:
+      - hadoop-network
 
-  worker:
+  worker1:
     image: local/hadoop-worker:3.3.6-java11
-    container_name: worker
+    container_name: worker1
+    hostname: worker1
     restart: always
+    ports:
+      - 9864:9864
     volumes:
       - worker-vol1:/hadoop/dfs/data
     depends_on:
       master:
         condition: service_healthy
+    networks:
+      - hadoop-network
+
+  worker2:
+    image: local/hadoop-worker:3.3.6-java11
+    container_name: worker2
+    hostname: worker2
+    restart: always
+    ports:
+      - 9865:9864
+    volumes:
+      - worker-vol2:/hadoop/dfs/data
+    depends_on:
+      master:
+        condition: service_healthy
+    networks:
+      - hadoop-network
+
+  worker3:
+    image: local/hadoop-worker:3.3.6-java11
+    container_name: worker3
+    hostname: worker3
+    restart: always
+    ports:
+      - 9866:9864
+    volumes:
+      - worker-vol3:/hadoop/dfs/data
+    depends_on:
+      master:
+        condition: service_healthy
+    networks:
+      - hadoop-network
+
+networks:
+  hadoop-network:
+    name: hadoop-network
 
 volumes:
   master-vol:
   worker-vol1:
+  worker-vol2:
+  worker-vol3:
