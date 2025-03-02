@@ -23,6 +23,6 @@
 	</property>
 	<property>
 		<name>hadoop.http.staticuser.user</name>
-		<value>root</value>
+		<value>root</value>	<!-- Allow hdfs operations from web UI-->
 	</property>
 </configuration>

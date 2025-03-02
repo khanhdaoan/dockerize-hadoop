@@ -1,0 +1,32 @@
+services:
+  master:
+    image: local/hadoop-master:3.3.6-java11
+    container_name: master
+    restart: always
+    ports:
+      - 9870:9870
+    #  - 9000:9000
+    volumes:
+      - master-vol:/mnt/dfs/name
+      - /home/hadoop/docker-vols/host:/mnt/host
+    # Override healthcheck
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://master:9870/"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+  worker:
+    image: local/hadoop-worker:3.3.6-java11
+    container_name: worker
+    restart: always
+    volumes:
+      - worker-vol1:/hadoop/dfs/data
+    depends_on:
+      master:
+        condition: service_healthy
+
+volumes:
+  master-vol:
+  worker-vol1:

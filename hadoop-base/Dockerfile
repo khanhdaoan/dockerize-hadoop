@@ -9,6 +9,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
 		openjdk-11-jdk-headless \
 		netcat-openbsd \
 		net-tools \
+		curl \
 		aria2 \
 		gnupg \
 		libsnappy-dev \

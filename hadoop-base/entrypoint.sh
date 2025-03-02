@@ -9,7 +9,7 @@ if [ ! -f "/.initialized" ]; then
 
 	# Set initialization flag
 	touch "/.initialized"
-	echo "Hadoop base initialization flag" >> /.initialized
+	echo "Hadoop exclusion file created." >> /.initialized
 fi
 
 # Execute the command passed to docker run
