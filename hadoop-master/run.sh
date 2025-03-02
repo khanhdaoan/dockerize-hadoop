@@ -1,11 +1,11 @@
 #!/bin/bash
 
-if [ ! -d "/mnt/dfs/name"]; then
+if [ ! -d "/mnt/dfs/name" ]; then
 	echo "Namenode directory missing!"
 	exit 2
 fi
 
-if [ ! -d "/mnt/host"]; then
+if [ ! -d "/mnt/host" ]; then
 	echo "Host mount point missing!"
 	exit 2
 fi
